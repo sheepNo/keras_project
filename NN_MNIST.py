@@ -15,7 +15,7 @@ import numpy as np
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 #
 # model = Sequential()
-# model.add(Dense(units=64, activation='relu', input_dim=768))
+# model.add(Dense(unit=64, activation='relu', input_dim=768))
 # model.add(Dense(units=10, activation='softmax'))
 #
 # # train[i] represents i-th data, there are 60000 training data
