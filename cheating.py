@@ -95,11 +95,7 @@ for e in range(epochs):
     batches = 0
     for x_batch, y_batch in datagen.flow(x_train, y_train, batch_size=batch_size):
         print('Batch', batches)
-		model.fit(x_batch, y_batch,
-          batch_size=batch_size,
-          epochs=epochs,
-          verbose=1,
-          validation_data=(x_test, y_test))
+        model.fit(x_batch,y_batch,batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(x_test, y_test))
         batches += 1
         if batches >= len(x_train) / batch_size:
             # we need to break the loop by hand because
