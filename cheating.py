@@ -4,11 +4,12 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
+from keras.preprocessing.image import ImageDataGenerator
 from keras import backend as K
 
 batch_size = 128
 num_classes = 10
-epochs = 12
+epochs = 4
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -37,6 +38,29 @@ print(x_test.shape[0], 'test samples')
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
+
+
+
+
+
+datagen = ImageDataGenerator(
+    featurewise_center=False,
+    featurewise_std_normalization=True,
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    horizontal_flip=True)
+
+# compute quantities required for featurewise normalization
+# (std, mean, and principal components if ZCA whitening is applied)
+datagen.fit(x_train)
+
+
+
+
+
+
+
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
@@ -49,15 +73,39 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
+
+
+
 model.compile(loss=keras.losses.categorical_crossentropy,
-              optimizer=keras.optimizers.Adadelta(),
+              # optimizer=keras.optimizers.Adadelta(),
+		optimizer=keras.optimizers.Adagrad(),
               metrics=['accuracy'])
 
-model.fit(x_train, y_train,
-          batch_size=batch_size,
-          epochs=epochs,
-          verbose=1,
-          validation_data=(x_test, y_test))
+
+
+
+
+# fits the model on batches with real-time data augmentation:
+model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
+                    steps_per_epoch=len(x_train) / batch_size, epochs=epochs)
+
+# here's a more "manual" example
+for e in range(epochs):
+    print('Epoch', e)
+    batches = 0
+    for x_batch, y_batch in datagen.flow(x_train, y_train, batch_size=batch_size):
+        print('Batch', batches)
+        model.fit(x_batch,y_batch,batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(x_test, y_test))
+        batches += 1
+        if batches >= len(x_train) / batch_size:
+            # we need to break the loop by hand because
+            # the generator loops indefinitely
+            break
+
+
+
+
+
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
