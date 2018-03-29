@@ -10,6 +10,7 @@ from keras.datasets import mnist
 from keras.utils import to_categorical
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers.normalization import BatchNormalization
+import matplotlib.pyplot as plt
 
 import numpy as np
 from keras.utils import plot_model
