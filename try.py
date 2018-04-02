@@ -100,9 +100,9 @@ print(len(incorrect_indices)," classified incorrectly")
 print(correct_indices[:9])
 print(incorrect_indices[:9])
 # adapt figure size to accomodate 18 subplots
-plt.rcParams['figure.figsize'] = (7,14)
+plt.rcParams['figure.figsize'] = (14,28)
 
-figure_evaluation = plt.figure()
+plt.figure(1)
 
 # plot 9 correct predictions
 for i, correct in enumerate(correct_indices[:9]):
@@ -120,5 +120,4 @@ for i, incorrect in enumerate(incorrect_indices[:9]):
     plt.xticks([])
     plt.yticks([])
 
-figure_evaluation
-
+plt.savefig('fig1.png')
