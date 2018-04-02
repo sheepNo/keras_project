@@ -74,4 +74,3 @@ model.fit_generator(datagen.flow(data, labels, batch_size=200), epochs=16, valid
 score = model.evaluate(test, testlabels, verbose=1)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-

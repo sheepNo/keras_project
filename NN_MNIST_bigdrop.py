@@ -18,11 +18,11 @@ img_rows, img_cols = 28, 28
 (data, labels), (test, testlabels)  = mnist.load_data()
 
 datagen = ImageDataGenerator(
-            rotation_range=5,
-            width_shift_range=0.1,
-            height_shift_range=0.1,
-            zoom_range=0.1,
-            shear_range=0.1)
+            rotation_range=10,
+            width_shift_range=0.2,
+            height_shift_range=0.2,
+            zoom_range=0.2,
+            shear_range=0.2)
 
 # cheating
 # if K.image_data_format() == 'channels_first':
@@ -41,19 +41,19 @@ model = Sequential()
 #####################################$
 model.add(Conv2D(32, kernel_size=(2,3), activation='relu', input_shape=(28,28, 1)))
 model.add(BatchNormalization())
-# model.add(Dropout(0.25))
+model.add(Dropout(0.50))
 #####################################$
 # model.add(AveragePooling2D(pool_size=(2,2))) # 2,1 is pretty good
 #####################################$
 model.add(Conv2D(32, kernel_size=(4,6), activation='relu'))
 model.add(BatchNormalization())
-# model.add(Dropout(0.20))
+model.add(Dropout(0.40))
 #####################################$
-# model.add(AveragePooling2D(pool_size=(2,2))) # 2,1 is pretty good
+model.add(AveragePooling2D(pool_size=(2,2))) # 2,1 is pretty good
 #####################################$
-model.add(Conv2D(64, kernel_size=(6,6), activation='sigmoid'))
+model.add(Conv2D(64, kernel_size=(6,9), activation='sigmoid'))
 model.add(BatchNormalization())
-# model.add(Dropout(0.10))
+model.add(Dropout(0.10))
 #####################################$
 model.add(MaxPooling2D(pool_size=(2,2))) # 2,1 is pretty good
 #####################################$
