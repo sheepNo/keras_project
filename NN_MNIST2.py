@@ -6,9 +6,9 @@ from keras import optimizers
 import numpy as np
 from keras import backend as K
 
-batch_size = 100
+batch_size = 500
 num_classes = 10
-epochs = 2
+epochs = 10
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 img_rows, img_cols = 28, 28
@@ -51,14 +51,14 @@ y_test = keras.utils.to_categorical(y_test, num_classes)
 #^^^ split the labels into its classes, here it's 10
 
 model = Sequential()
-model.add(Dense(50, input_shape=input_shape, activation='relu'))
-model.add(Dense(50, activation='relu'))
+model.add(Dense(28, input_shape=input_shape, activation='relu'))
+model.add(Dense(14, activation='relu'))
 model.add(Flatten())
 #the validation_data didn't work without using the Flatten , why??
 model.add(Dense(10, activation='softmax'))
 
 # Compile model
-model.compile(loss='binary_crossentropy', optimizer='adam',
+model.compile(loss='categorical_crossentropy', optimizer='adam',
 metrics=['accuracy'])
 #Test loss: 0.04506711347810924
 #Test accuracy: 0.985790002155304
