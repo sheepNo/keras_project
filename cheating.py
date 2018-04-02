@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import keras
 from keras.datasets import mnist
 from keras.models import Sequential
@@ -7,9 +7,9 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.preprocessing.image import ImageDataGenerator
 from keras import backend as K
 
-batch_size = 128
+batch_size = 300
 num_classes = 10
-epochs = 4
+epochs = 10
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -44,16 +44,15 @@ y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
 datagen = ImageDataGenerator(
-    featurewise_center=False,
-    featurewise_std_normalization=True,
-    rotation_range=20,
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    horizontal_flip=True)
+    rotation_range=10,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    zoom_range=0.1,
+    shear_range=0.2)
 
 # compute quantities required for featurewise normalization
 # (std, mean, and principal components if ZCA whitening is applied)
-datagen.fit(x_train)
+# datagen.fit(x_train)
 
 
 
@@ -66,7 +65,8 @@ model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
                  input_shape=input_shape))
 model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 1)))
 model.add(Dropout(0.25))
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
@@ -87,20 +87,20 @@ model.compile(loss=keras.losses.categorical_crossentropy,
 
 # fits the model on batches with real-time data augmentation:
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-                    steps_per_epoch=len(x_train) / batch_size, epochs=epochs)
+                   steps_per_epoch=len(x_train) / batch_size, epochs=epochs, verbose=1)
 
 # here's a more "manual" example
-for e in range(epochs):
-    print('Epoch', e)
-    batches = 0
-    for x_batch, y_batch in datagen.flow(x_train, y_train, batch_size=batch_size):
-        print('Batch', batches)
-        model.fit(x_batch,y_batch,batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(x_test, y_test))
-        batches += 1
-        if batches >= len(x_train) / batch_size:
+#for e in range(epochs):
+#    print('Epoch', e)
+ #   batches = 0
+  #  for x_batch, y_batch in datagen.flow(x_train, y_train, batch_size=batch_size):
+   #     print('Batch', batches)
+    #    model.fit(x_batch,y_batch,batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(x_test, y_test))
+     #   batches += 1
+      #  if batches >= len(x_train) / batch_size:
             # we need to break the loop by hand because
             # the generator loops indefinitely
-            break
+       #     break
 
 
 
